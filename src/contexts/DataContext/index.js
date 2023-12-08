@@ -30,6 +30,16 @@ export const DataProvider = ({ children }) => {
     if (data) return;
     getData();
   });
+
+  const lastEventData = useCallback(() => {
+    if (!data || !data.events || data.events.length === 0) {
+      return null;
+    }
+    const sortedEvents = [...data.events].sort(
+      (eventA, eventB) => new Date(eventB.date) - new Date(eventA.date)
+    );
+    return sortedEvents[0];
+  }, [data]);
   
   return (
     <DataContext.Provider
@@ -37,6 +47,7 @@ export const DataProvider = ({ children }) => {
       value={{
         data,
         error,
+        lastEventData,
       }}
     >
       {children}
